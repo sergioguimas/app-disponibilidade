@@ -2,5 +2,21 @@ import { FastifyInstance } from 'fastify'
 import { receberStatus } from './status.controller'
 
 export default async function statusRoutes(app: FastifyInstance) {
-  app.post('/webhook', receberStatus)
+
+  app.post('/webhook', {
+    
+    schema: {
+      body: {
+        type: 'object',
+        required: ['identificacao', 'status'],
+        properties: {
+          identificacao: { type: 'string' },
+          status: { type: 'string' },
+          source: { type: 'string' }
+        }
+      }
+    }
+
+  }, receberStatus)
+
 }

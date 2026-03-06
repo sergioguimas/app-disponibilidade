@@ -1,6 +1,12 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { inserirStatus } from './status.service'
 
+interface StatusBody {
+  identificacao: string
+  status: string
+  source?: string
+}
+
 export async function receberStatus(
   request: FastifyRequest,
   reply: FastifyReply
@@ -11,18 +17,31 @@ export async function receberStatus(
     return reply.status(401).send({ error: 'Não autorizado' })
   }
 
-  const body = request.body as any
+  const body = request.body as StatusBody
 
-  if (!body.identificacao || !body.status) {
+  if (!body || !body.identificacao || !body.status) {
     return reply.status(400).send({
       error: 'identificacao e status são obrigatórios'
     })
   }
 
   try {
-    const result = await inserirStatus(body)
-    return reply.send(result)
+
+    const result = await inserirStatus({
+      identificacao: body.identificacao,
+      status: body.status,
+      source: body.source || 'webhook'
+    })
+
+    return reply.status(201).send(result)
+
   } catch (error: any) {
-    return reply.status(400).send({ error: error.message })
+
+    request.log.error(error)
+
+    return reply.status(400).send({
+      error: error.message || 'Erro ao registrar status'
+    })
+
   }
 }

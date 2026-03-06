@@ -11,11 +11,16 @@ const statusValidos = [
 interface StatusPayload {
   identificacao: string
   status: string
-  source?: string
+  source: string
 }
 
 export async function inserirStatus(payload: StatusPayload) {
+
   const { identificacao, status, source } = payload
+
+  if (!identificacao || !status) {
+    throw new Error('Payload inválido')
+  }
 
   if (!statusValidos.includes(status)) {
     throw new Error('Status inválido')
@@ -33,15 +38,21 @@ export async function inserirStatus(payload: StatusPayload) {
 
   const { error } = await supabase
     .from('status_logs')
-    .insert({
-      funcionario_id: funcionario.id,
-      status,
-      source
-    })
+    .insert([
+      {
+        funcionario_id: funcionario.id,
+        status,
+        source
+      }
+    ])
 
   if (error) {
     throw new Error(error.message)
   }
 
-  return { success: true }
+  return {
+    success: true,
+    funcionario_id: funcionario.id,
+    status
+  }
 }
