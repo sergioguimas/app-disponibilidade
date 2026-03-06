@@ -17,22 +17,13 @@ interface StatusPayload {
 export async function inserirStatus(payload: StatusPayload) {
   const { identificacao, status, source } = payload
 
-  console.log('Identificação recebida:', identificacao)
-
   if (!statusValidos.includes(status)) {
     throw new Error('Status inválido')
   }
 
-  const { data } = await supabase
-    .from('funcionarios')
-    .select('*')
-    .eq('identificacao', identificacao)
-
-  console.log('Resultado da busca:', data)
-
   const { data: funcionario, error: erroFuncionario } = await supabase
     .from('funcionarios')
-    .select('*')
+    .select('id')
     .eq('identificacao', identificacao)
     .single()
 
