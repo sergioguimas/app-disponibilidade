@@ -3,9 +3,9 @@ import { supabase } from '../../plugins/supabase'
 const statusValidos = [
   'available',
   'busy',
-  'break',
-  'offline',
-  'away'
+  'coffee',
+  'lunch',
+  'offline'
 ]
 
 interface StatusPayload {

@@ -20,6 +20,7 @@ export function DashboardPage() {
   const [departmentFilter] = useState("todos")
   const [collapsedDepartments, setCollapsedDepartments] = useState<Record<string, boolean>>({})
   const [viewMode, setViewMode] = useState<ViewMode>("cards")
+  const [sortMode, setSortMode] = useState<"name" | "recent">("name")
 
   useEffect(() => {
     async function load() {
@@ -50,9 +51,14 @@ export function DashboardPage() {
   }, [funcionarios, departmentFilter])
 
   const grupos = useMemo(() => {
-    const funcionariosOrdenados = [...funcionariosFiltrados].sort(
-      (a, b) => getTimestamp(b.status_atual_em) - getTimestamp(a.status_atual_em)
-    )
+    const funcionariosOrdenados = [...funcionariosFiltrados].sort((a, b) => {
+      if (sortMode === "recent") {
+        return getTimestamp(b.status_atual_em) - getTimestamp(a.status_atual_em)
+      }
+      return a.nome.localeCompare(b.nome, "pt-BR", { sensitivity: "base" })
+    })
+
+    
 
     const mapa = new Map<string, Funcionario[]>()
 
@@ -67,7 +73,7 @@ export function DashboardPage() {
     }
 
     return Array.from(mapa.entries()).sort(([a], [b]) => a.localeCompare(b))
-  }, [funcionariosFiltrados])
+  }, [funcionariosFiltrados, sortMode])
 
   useEffect(() => {
     if (viewMode === "collapsed") {
@@ -92,7 +98,7 @@ export function DashboardPage() {
     (f) => f.status_atual === "busy"
   ).length
   const totalPausa = funcionariosFiltrados.filter(
-    (f) => f.status_atual === "break"
+    (f) => f.status_atual === "coffee"
   ).length
   const totalSemStatus = funcionariosFiltrados.filter(
     (f) => !f.status_atual
@@ -107,7 +113,7 @@ export function DashboardPage() {
 
   function handleStatusUpdated(
     identificacao: string,
-    status: Status | null | undefined
+    status: Status | null
   ) {
     const now = new Date().toISOString()
 
@@ -174,7 +180,7 @@ export function DashboardPage() {
 
               <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3">
                 <p className="text-xs uppercase tracking-wide text-amber-300/70">
-                  Em pausa
+                  Em café
                 </p>
                 <p className="mt-1 text-xl font-semibold text-amber-300">
                   {totalPausa}
@@ -183,7 +189,7 @@ export function DashboardPage() {
 
               <div className="rounded-xl border border-zinc-700 bg-zinc-900/70 px-4 py-3">
                 <p className="text-xs uppercase tracking-wide text-zinc-500">
-                  Sem status
+                  Offline
                 </p>
                 <p className="mt-1 text-xl font-semibold text-zinc-300">
                   {totalSemStatus}
@@ -194,54 +200,68 @@ export function DashboardPage() {
         </header>
 
         <section className="mb-6 rounded-2xl border border-zinc-900 bg-zinc-950/50 p-4">
-          <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
-              <div>
-                <p className="text-sm font-medium text-zinc-400">Visualização</p>
+          <div className="flex flex-wrap items-end gap-6">
 
-                <div className="mt-2 inline-flex rounded-xl border border-zinc-800 bg-zinc-900 p-1 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setViewMode("cards")}
-                    className={`rounded-lg px-3 py-2 text-sm transition ${
-                      viewMode === "cards"
-                        ? "bg-zinc-700 text-white ring-2 ring-zinc-600"
-                        : "text-zinc-300 hover:bg-zinc-800"
-                    }`}
-                  >
-                    Cards
-                  </button>
+            {/* VIEW MODE */}
+            <div className="flex flex-col">
+              <p className="text-sm font-medium text-zinc-400">Visualização</p>
 
-                  <button
-                    type="button"
-                    onClick={() => setViewMode("list")}
-                    className={`rounded-lg px-3 py-2 text-sm transition ${
-                      viewMode === "list"
-                        ? "bg-zinc-700 text-white ring-2 ring-zinc-600"
-                        : "text-zinc-300 hover:bg-zinc-800"
-                    }`}
-                  >
-                    Lista
-                  </button>
+              <div className="mt-2 inline-flex items-center rounded-xl border border-zinc-800 bg-zinc-900 p-1 gap-2">
 
-                  <button
-                    type="button"
-                    onClick={() => setViewMode("collapsed")}
-                    className={`rounded-lg px-3 py-2 text-sm transition ${
-                      viewMode === "collapsed"
-                        ? "bg-zinc-700 text-white ring-2 ring-zinc-600"
-                        : "text-zinc-300 hover:bg-zinc-800"
-                    }`}
-                  >
-                    Recolhido
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setViewMode("cards")}
+                  className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                    viewMode === "cards"
+                      ? "bg-zinc-700 text-white ring-2 ring-zinc-600"
+                      : "text-zinc-300 hover:bg-zinc-800"
+                  }`}
+                >
+                  Cards
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setViewMode("list")}
+                  className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                    viewMode === "list"
+                      ? "bg-zinc-700 text-white ring-2 ring-zinc-600"
+                      : "text-zinc-300 hover:bg-zinc-800"
+                  }`}
+                >
+                  Lista
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setViewMode("collapsed")}
+                  className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                    viewMode === "collapsed"
+                      ? "bg-zinc-700 text-white ring-2 ring-zinc-600"
+                      : "text-zinc-300 hover:bg-zinc-800"
+                  }`}
+                >
+                  Recolhido
+                </button>
+
               </div>
             </div>
 
-            <div className="text-sm text-zinc-400">
-              Ordenação automática por atualização mais recente
+            {/* SORT MODE */}
+            <div className="flex flex-col">
+              <p className="text-sm font-medium text-zinc-400">Ordenar por</p>
+
+              <select
+                id="sortMode"
+                value={sortMode}
+                onChange={(e) => setSortMode(e.target.value as "name" | "recent")}
+                className="mt-2 h-[38px] min-w-[220px] rounded-xl border border-zinc-800 bg-zinc-900 px-4 text-sm text-zinc-100 outline-none transition focus:border-zinc-700"
+              >
+                <option value="name">Nome (A–Z)</option>
+                <option value="recent">Atualização mais recente</option>
+              </select>
             </div>
+
           </div>
         </section>
 

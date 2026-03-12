@@ -24,7 +24,6 @@ export function EmployeeCard({ funcionario, onClick }: EmployeeCardProps) {
           <h3 className="truncate text-base font-semibold text-white">
             {funcionario.nome}
           </h3>
-          <p className="mt-1 text-sm text-zinc-400">{funcionario.identificacao}</p>
         </div>
 
         <div className="shrink-0">
@@ -32,14 +31,7 @@ export function EmployeeCard({ funcionario, onClick }: EmployeeCardProps) {
         </div>
       </div>
 
-      <div className="mt-4 space-y-1.5 text-sm">
-        <p className="text-zinc-300">
-          <span className="text-zinc-500">Depto:</span>{" "}
-          <span className="font-medium text-zinc-100">
-            {funcionario.departamento || "Sem departamento"}
-          </span>
-        </p>
-
+      <div className="mt-4 space-y-1.5 text-sm">        
         <p className="text-zinc-400">
           <span className="text-zinc-500">Atualizado:</span>{" "}
           {formatarData(funcionario.status_atual_em)}

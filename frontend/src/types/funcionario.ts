@@ -1,4 +1,4 @@
-export type Status = "available" | "busy" | "break"
+export type Status = 'available'| 'busy'| 'coffee'| 'lunch'| 'offline'
 
 export interface HistoricoStatus {
   id: string

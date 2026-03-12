@@ -1,6 +1,6 @@
 export type StatusTipo =
   | 'available'
   | 'busy'
-  | 'break'
+  | 'coffee'
+  | 'lunch'
   | 'offline'
-  | 'away'

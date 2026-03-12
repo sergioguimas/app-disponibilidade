@@ -87,16 +87,16 @@ export function EmployeeModal({
                 onClick={() => handleChangeStatus("busy")}
                 className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2 text-sm text-rose-300 transition hover:bg-rose-500/20 disabled:opacity-50"
               >
-                Ocupado
+                Atendimento
               </button>
 
               <button
                 type="button"
                 disabled={saving}
-                onClick={() => handleChangeStatus("break")}
+                onClick={() => handleChangeStatus("coffee")}
                 className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-sm text-amber-300 transition hover:bg-amber-500/20 disabled:opacity-50"
               >
-                Em pausa
+                Café
               </button>
             </div>
           </div>
