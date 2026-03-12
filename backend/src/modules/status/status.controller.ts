@@ -45,3 +45,32 @@ export async function receberStatus(
 
   }
 }
+
+export async function atualizarStatusManual(
+  request: FastifyRequest,
+  reply: FastifyReply
+) {
+  const body = request.body as StatusBody
+
+  if (!body || !body.identificacao || !body.status) {
+    return reply.status(400).send({
+      error: 'identificacao e status são obrigatórios'
+    })
+  }
+
+  try {
+    const result = await inserirStatus({
+      identificacao: body.identificacao,
+      status: body.status,
+      source: body.source || 'painel'
+    })
+
+    return reply.status(201).send(result)
+  } catch (error: any) {
+    request.log.error(error)
+
+    return reply.status(400).send({
+      error: error.message || 'Erro ao registrar status'
+    })
+  }
+}

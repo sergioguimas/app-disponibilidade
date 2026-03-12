@@ -2,7 +2,7 @@ import type { Status } from "../../types/funcionario"
 import { getStatusClasses, getStatusLabel } from "../../lib/utils/status"
 
 interface StatusBadgeProps {
-  status: Status
+  status?: Status | null
 }
 
 export function StatusBadge({ status }: StatusBadgeProps) {

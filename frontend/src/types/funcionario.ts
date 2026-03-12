@@ -12,8 +12,7 @@ export interface Funcionario {
   nome: string
   identificacao: string
   departamento?: string | null
-  status: Status
+  status_atual?: Status | null
+  status_atual_em?: string | null
   observacao?: string | null
-  updated_at?: string
-  historico?: HistoricoStatus[]
 }

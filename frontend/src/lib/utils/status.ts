@@ -1,6 +1,6 @@
 import type { Status } from "../../types/funcionario"
 
-export function getStatusLabel(status: Status) {
+export function getStatusLabel(status?: Status | null) {
   switch (status) {
     case "available":
       return "Disponível"
@@ -13,7 +13,7 @@ export function getStatusLabel(status: Status) {
   }
 }
 
-export function getStatusClasses(status: Status) {
+export function getStatusClasses(status: Status | null) {
   switch (status) {
     case "available":
       return "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"

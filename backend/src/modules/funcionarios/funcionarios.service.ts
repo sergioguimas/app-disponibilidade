@@ -8,6 +8,7 @@ export async function listarFuncionarios() {
       id,
       nome,
       identificacao,
+      departamento,
       status_atual,
       status_atual_em
     `)

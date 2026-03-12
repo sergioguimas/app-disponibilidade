@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify'
-import { receberStatus } from './status.controller'
+import { receberStatus, atualizarStatusManual } from './status.controller'
+
 
 export default async function statusRoutes(app: FastifyInstance) {
 
@@ -18,5 +19,19 @@ export default async function statusRoutes(app: FastifyInstance) {
     }
 
   }, receberStatus)
+
+  app.post('/manual', {
+    schema: {
+      body: {
+        type: 'object',
+        required: ['identificacao', 'status'],
+        properties: {
+          identificacao: { type: 'string' },
+          status: { type: 'string' },
+          source: { type: 'string' }
+        }
+      }
+    }
+  }, atualizarStatusManual)
 
 }
