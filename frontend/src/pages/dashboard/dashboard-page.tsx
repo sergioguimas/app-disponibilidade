@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { getFuncionarios } from "../../lib/api/funcionarios"
 import type { Funcionario, Status } from "../../types/funcionario"
 import { DepartmentSection } from "../../components/dashboard/department-section"
+import type { ViewMode } from "../../components/dashboard/department-section"
 import { EmployeeModal } from "../../components/dashboard/employee-modal"
 
 function getTimestamp(data?: string | null) {
@@ -16,8 +17,9 @@ export function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [selectedFuncionario, setSelectedFuncionario] = useState<Funcionario | null>(null)
-  const [departmentFilter, setDepartmentFilter] = useState("todos")
+  const [departmentFilter] = useState("todos")
   const [collapsedDepartments, setCollapsedDepartments] = useState<Record<string, boolean>>({})
+  const [viewMode, setViewMode] = useState<ViewMode>("cards")
 
   useEffect(() => {
     async function load() {
@@ -37,16 +39,6 @@ export function DashboardPage() {
 
     load()
   }, [])
-
-  const departamentosDisponiveis = useMemo(() => {
-    const lista = Array.from(
-      new Set(
-        funcionarios.map((funcionario) => funcionario.departamento?.trim() || "Sem departamento")
-      )
-    )
-
-    return lista.sort((a, b) => a.localeCompare(b))
-  }, [funcionarios])
 
   const funcionariosFiltrados = useMemo(() => {
     if (departmentFilter === "todos") return funcionarios
@@ -76,6 +68,21 @@ export function DashboardPage() {
 
     return Array.from(mapa.entries()).sort(([a], [b]) => a.localeCompare(b))
   }, [funcionariosFiltrados])
+
+  useEffect(() => {
+    if (viewMode === "collapsed") {
+      const nextState: Record<string, boolean> = {}
+
+      for (const [nomeGrupo] of grupos) {
+        nextState[nomeGrupo] = true
+      }
+
+      setCollapsedDepartments(nextState)
+      return
+    }
+
+    setCollapsedDepartments({})
+  }, [viewMode, grupos])
 
   const totalFuncionarios = funcionariosFiltrados.length
   const totalDisponiveis = funcionariosFiltrados.filter(
@@ -187,29 +194,49 @@ export function DashboardPage() {
         </header>
 
         <section className="mb-6 rounded-2xl border border-zinc-900 bg-zinc-950/50 p-4">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <label
-                htmlFor="departmentFilter"
-                className="text-sm font-medium text-zinc-400"
-              >
-                Filtrar por departamento
-              </label>
+          <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
+              <div>
+                <p className="text-sm font-medium text-zinc-400">Visualização</p>
 
-              <select
-                id="departmentFilter"
-                value={departmentFilter}
-                onChange={(e) => setDepartmentFilter(e.target.value)}
-                className="mt-2 min-w-[220px] rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-2.5 text-sm text-zinc-100 outline-none transition focus:border-zinc-700"
-              >
-                <option value="todos">Todos</option>
+                <div className="mt-2 inline-flex rounded-xl border border-zinc-800 bg-zinc-900 p-1 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("cards")}
+                    className={`rounded-lg px-3 py-2 text-sm transition ${
+                      viewMode === "cards"
+                        ? "bg-zinc-700 text-white ring-2 ring-zinc-600"
+                        : "text-zinc-300 hover:bg-zinc-800"
+                    }`}
+                  >
+                    Cards
+                  </button>
 
-                {departamentosDisponiveis.map((departamento) => (
-                  <option key={departamento} value={departamento}>
-                    {departamento}
-                  </option>
-                ))}
-              </select>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("list")}
+                    className={`rounded-lg px-3 py-2 text-sm transition ${
+                      viewMode === "list"
+                        ? "bg-zinc-700 text-white ring-2 ring-zinc-600"
+                        : "text-zinc-300 hover:bg-zinc-800"
+                    }`}
+                  >
+                    Lista
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("collapsed")}
+                    className={`rounded-lg px-3 py-2 text-sm transition ${
+                      viewMode === "collapsed"
+                        ? "bg-zinc-700 text-white ring-2 ring-zinc-600"
+                        : "text-zinc-300 hover:bg-zinc-800"
+                    }`}
+                  >
+                    Recolhido
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div className="text-sm text-zinc-400">
@@ -243,6 +270,7 @@ export function DashboardPage() {
                 title={nomeGrupo}
                 funcionarios={items}
                 collapsed={!!collapsedDepartments[nomeGrupo]}
+                viewMode={viewMode}
                 onToggle={() => toggleDepartment(nomeGrupo)}
                 onEmployeeClick={setSelectedFuncionario}
               />
