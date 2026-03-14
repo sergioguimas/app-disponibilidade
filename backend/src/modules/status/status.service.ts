@@ -5,6 +5,7 @@ const statusValidos = [
   'busy',
   'coffee',
   'lunch',
+  'home',
   'offline'
 ]
 

@@ -3,4 +3,5 @@ export type StatusTipo =
   | 'busy'
   | 'coffee'
   | 'lunch'
+  | 'home'
   | 'offline'

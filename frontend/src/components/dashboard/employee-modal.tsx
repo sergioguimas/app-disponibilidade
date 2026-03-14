@@ -64,19 +64,28 @@ export function EmployeeModal({
         </div>
 
         <div className="mt-6 space-y-5">
-          <div>
-            <p className="mb-2 text-sm text-zinc-400">Status atual</p>
-            <StatusBadge status={funcionario.status_atual} />
+          <div className="grid grid-cols-2">
+            <div>
+              <p className="mb-2 text-sm text-zinc-400">Status atual</p>
+              <StatusBadge status={funcionario.status_atual} />
+            </div>
+
+            <div>
+              <p className="mb-2 text-sm text-zinc-400">Departamento</p>
+              <p className="text-sm text-zinc-100">
+                {funcionario.departamento || "Sem departamento"}
+              </p>
+            </div>
           </div>
 
           <div>
             <p className="mb-2 text-sm text-zinc-400">Alterar status</p>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 disabled={saving}
                 onClick={() => handleChangeStatus("available")}
-                className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-300 transition hover:bg-emerald-500/20 disabled:opacity-50"
+                className="col-span-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-600 transition hover:bg-emerald-500/20 disabled:opacity-50"
               >
                 Disponível
               </button>
@@ -84,8 +93,17 @@ export function EmployeeModal({
               <button
                 type="button"
                 disabled={saving}
+                onClick={() => handleChangeStatus("home")}
+                className="rounded-xl border border-emerald-500/30 bg-violet-100 px-4 py-2 text-sm text-violet-500 transition hover:bg-violet-300 disabled:opacity-50"
+              >
+                Home Office
+              </button>
+
+              <button
+                type="button"
+                disabled={saving}
                 onClick={() => handleChangeStatus("busy")}
-                className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2 text-sm text-rose-300 transition hover:bg-rose-500/20 disabled:opacity-50"
+                className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2 text-sm text-rose-500 transition hover:bg-rose-500/20 disabled:opacity-50"
               >
                 Atendimento
               </button>
@@ -94,18 +112,38 @@ export function EmployeeModal({
                 type="button"
                 disabled={saving}
                 onClick={() => handleChangeStatus("coffee")}
-                className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-sm text-amber-300 transition hover:bg-amber-500/20 disabled:opacity-50"
+                className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-sm text-amber-200 transition hover:bg-amber-500/20 disabled:opacity-50"
               >
                 Café
               </button>
-            </div>
-          </div>
 
-          <div>
-            <p className="mb-2 text-sm text-zinc-400">Departamento</p>
-            <p className="text-sm text-zinc-100">
-              {funcionario.departamento || "Sem departamento"}
-            </p>
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => handleChangeStatus("lunch")}
+                className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-sm text-amber-600 transition hover:bg-amber-500/20 disabled:opacity-50"
+              >
+                Almoço
+              </button>
+
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => handleChangeStatus("available")}
+                className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-300 transition hover:bg-emerald-500/20 disabled:opacity-50"
+              >
+                Retorno
+              </button>
+
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => handleChangeStatus("offline")}
+                className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-sm text-grey-300 transition hover:bg-amber-500/20 disabled:opacity-50"
+              >
+                Encerrando
+              </button>
+            </div>
           </div>
 
           <div>

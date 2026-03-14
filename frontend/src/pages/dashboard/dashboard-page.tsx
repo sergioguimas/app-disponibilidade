@@ -100,8 +100,14 @@ export function DashboardPage() {
   const totalPausa = funcionariosFiltrados.filter(
     (f) => f.status_atual === "coffee"
   ).length
-  const totalSemStatus = funcionariosFiltrados.filter(
-    (f) => !f.status_atual
+  const totalAlmoco = funcionariosFiltrados.filter(
+    (f) => f.status_atual === "lunch"
+  ).length
+  const totalHome = funcionariosFiltrados.filter(
+    (f) => f.status_atual === "home"
+  ).length
+  const totalOffline = funcionariosFiltrados.filter(
+    (f) => f.status_atual === "offline"
   ).length
 
   function toggleDepartment(nomeDepartamento: string) {
@@ -154,11 +160,11 @@ export function DashboardPage() {
               </p>
             </div>
 
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 px-4 py-3">
+              <p className="text-xs uppercase tracking-wide text-zinc-500">Total</p>
+              <p className="mt-1 text-xl font-semibold text-white">{totalFuncionarios}</p>
+            </div>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
-              <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 px-4 py-3">
-                <p className="text-xs uppercase tracking-wide text-zinc-500">Total</p>
-                <p className="mt-1 text-xl font-semibold text-white">{totalFuncionarios}</p>
-              </div>
 
               <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3">
                 <p className="text-xs uppercase tracking-wide text-emerald-300/70">
@@ -169,6 +175,16 @@ export function DashboardPage() {
                 </p>
               </div>
 
+              <div className="rounded-xl border border-violet-500/50 bg-violet-300/10 px-4 py-3">
+                <p className="text-xs uppercase tracking-wide text-violet-400">
+                  Home Office
+                </p>
+                <p className="mt-1 text-xl font-semibold text-violet-400">
+                  {totalHome}
+                </p>
+              </div>
+
+
               <div className="rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3">
                 <p className="text-xs uppercase tracking-wide text-rose-300/70">
                   Ocupados
@@ -178,12 +194,21 @@ export function DashboardPage() {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3">
-                <p className="text-xs uppercase tracking-wide text-amber-300/70">
-                  Em café
+              <div className="rounded-xl border border-amber-300/20 bg-amber-300/10 px-4 py-3">
+                <p className="text-xs uppercase tracking-wide text-amber-200/70">
+                  Café
                 </p>
                 <p className="mt-1 text-xl font-semibold text-amber-300">
                   {totalPausa}
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3">
+                <p className="text-xs uppercase tracking-wide text-amber-600/70">
+                  Almoço
+                </p>
+                <p className="mt-1 text-xl font-semibold text-amber-300">
+                  {totalAlmoco}
                 </p>
               </div>
 
@@ -192,7 +217,7 @@ export function DashboardPage() {
                   Offline
                 </p>
                 <p className="mt-1 text-xl font-semibold text-zinc-300">
-                  {totalSemStatus}
+                  {totalOffline}
                 </p>
               </div>
             </div>
