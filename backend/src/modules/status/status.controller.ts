@@ -7,70 +7,16 @@ interface StatusBody {
   source?: string
 }
 
-export async function receberStatus(
-  request: FastifyRequest,
-  reply: FastifyReply
+export async function inserirStatusController(
+  request: FastifyRequest<{ Body: StatusBody }>
 ) {
-  const secret = request.headers['x-webhook-secret']
+  const { identificacao, status, source = 'api' } = request.body
 
-  if (secret !== process.env.WEBHOOK_SECRET) {
-    return reply.status(401).send({ error: 'Não autorizado' })
-  }
+  const result = await inserirStatus(request.organizacao_id, {
+    identificacao,
+    status,
+    source
+  })
 
-  const body = request.body as StatusBody
-
-  if (!body || !body.identificacao || !body.status) {
-    return reply.status(400).send({
-      error: 'identificacao e status são obrigatórios'
-    })
-  }
-
-  try {
-
-    const result = await inserirStatus({
-      identificacao: body.identificacao,
-      status: body.status,
-      source: body.source || 'webhook'
-    })
-
-    return reply.status(201).send(result)
-
-  } catch (error: any) {
-
-    request.log.error(error)
-
-    return reply.status(400).send({
-      error: error.message || 'Erro ao registrar status'
-    })
-
-  }
-}
-
-export async function atualizarStatusManual(
-  request: FastifyRequest,
-  reply: FastifyReply
-) {
-  const body = request.body as StatusBody
-
-  if (!body || !body.identificacao || !body.status) {
-    return reply.status(400).send({
-      error: 'identificacao e status são obrigatórios'
-    })
-  }
-
-  try {
-    const result = await inserirStatus({
-      identificacao: body.identificacao,
-      status: body.status,
-      source: body.source || 'painel'
-    })
-
-    return reply.status(201).send(result)
-  } catch (error: any) {
-    request.log.error(error)
-
-    return reply.status(400).send({
-      error: error.message || 'Erro ao registrar status'
-    })
-  }
+  return result
 }

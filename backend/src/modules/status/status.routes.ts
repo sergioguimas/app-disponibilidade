@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import { receberStatus, atualizarStatusManual } from './status.controller'
+import { inserirStatusController } from './status.controller'
 
 
 export default async function statusRoutes(app: FastifyInstance) {
@@ -18,7 +18,7 @@ export default async function statusRoutes(app: FastifyInstance) {
       }
     }
 
-  }, receberStatus)
+  }, inserirStatusController)
 
   app.post('/manual', {
     schema: {
@@ -32,6 +32,6 @@ export default async function statusRoutes(app: FastifyInstance) {
         }
       }
     }
-  }, atualizarStatusManual)
+  }, inserirStatusController)
 
 }
