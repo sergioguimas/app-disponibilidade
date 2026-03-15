@@ -2,6 +2,7 @@ import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import dotenv from 'dotenv'
 import routes from './routes'
+import { tenantPlugin } from './plugins/tenant'
 
 dotenv.config()
 
@@ -9,7 +10,7 @@ const app = Fastify({ logger: true })
 
 async function bootstrap() {
   await app.register(cors, { origin: true })
-
+  await app.register(tenantPlugin)
   await app.register(routes)
 
   const PORT = Number(process.env.PORT) || 3000

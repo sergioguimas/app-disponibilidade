@@ -1,25 +1,14 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { listarFuncionarios } from './funcionarios.service'
 
-export async function getFuncionarios(
+export async function listarFuncionariosController(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
 
-  try {
+  const funcionarios = await listarFuncionarios(
+    request.organizacao_id
+  )
 
-    const funcionarios = await listarFuncionarios()
-
-    return reply.send(funcionarios)
-
-  } catch (error: any) {
-
-    request.log.error(error)
-
-    return reply.status(500).send({
-      error: 'Erro ao buscar funcionários'
-    })
-
-  }
-
+  return funcionarios
 }

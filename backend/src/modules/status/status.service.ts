@@ -15,45 +15,32 @@ interface StatusPayload {
   source: string
 }
 
-export async function inserirStatus(payload: StatusPayload) {
+export async function inserirStatus(
+  organizacao_id: string,
+  payload: StatusPayload
+) {
 
   const { identificacao, status, source } = payload
 
-  if (!identificacao || !status) {
-    throw new Error('Payload inválido')
-  }
-
-  if (!statusValidos.includes(status)) {
-    throw new Error('Status inválido')
-  }
-
   const { data: funcionario, error: erroFuncionario } = await supabase
-    .from('funcionarios')
-    .select('id')
-    .eq('identificacao', identificacao)
-    .single()
+  .from('funcionarios')
+  .select('id')
+  .eq('identificacao', identificacao)
+  .eq('organizacao_id', organizacao_id)
+  .single()
 
   if (erroFuncionario || !funcionario) {
     throw new Error('Funcionário não encontrado')
   }
 
-  const { error } = await supabase
+  await supabase
     .from('status_logs')
     .insert([
       {
         funcionario_id: funcionario.id,
+        organizacao_id,
         status,
         source
       }
     ])
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  return {
-    success: true,
-    funcionario_id: funcionario.id,
-    status
-  }
 }

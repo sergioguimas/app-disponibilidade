@@ -1,6 +1,6 @@
 import { supabase } from '../../plugins/supabase'
 
-export async function listarFuncionarios() {
+export async function listarFuncionarios(organizacao_id: string) {
 
   const { data, error } = await supabase
     .from('funcionarios')
@@ -12,11 +12,10 @@ export async function listarFuncionarios() {
       status_atual,
       status_atual_em
     `)
+    .eq('organizacao_id', organizacao_id)
     .order('nome', { ascending: true })
 
-  if (error) {
-    throw new Error(error.message)
-  }
+  if (error) throw new Error(error.message)
 
   return data
 }
